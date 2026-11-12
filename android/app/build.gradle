@@ -37,11 +37,35 @@ android {
         }
     }
 
+    // The release key, when one is provided (the GitHub release workflow passes
+    // it in from a repository secret). Every build must be signed with the same
+    // key or an update will not install over the top; without one, each build
+    // container makes its own throwaway debug key.
+    signingConfigs {
+        release {
+            def keystore = System.getenv("LIFEBOARD_KEYSTORE")
+            if (keystore) {
+                storeFile file(keystore)
+                storeType "pkcs12"
+                storePassword System.getenv("LIFEBOARD_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("LIFEBOARD_KEY_ALIAS") ?: "lifeboard"
+                keyPassword System.getenv("LIFEBOARD_KEYSTORE_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false   // nothing here is big enough to need it
-            signingConfig signingConfigs.debug
+            signingConfig System.getenv("LIFEBOARD_KEYSTORE")
+                ? signingConfigs.release : signingConfigs.debug
         }
+    }
+
+    lint {
+        // Release builds run lint and fail on its findings; this app is
+        // sideloaded and its checks run elsewhere.
+        checkReleaseBuilds false
     }
 
     compileOptions {

@@ -1,0 +1,65 @@
+name: Android APK
+
+# Builds the standalone APK. On a published release it is attached to that
+# release; run it by hand from the Actions tab to get a test build.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore the build cache
+        uses: actions/cache@v4
+        with:
+          path: out/cache
+          key: android-${{ hashFiles('android/build.gradle', 'android/app/build.gradle', 'android/build-in-docker.sh') }}
+          restore-keys: android-
+
+      - name: Signing key
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/keys"
+          if [ -n "$KEYSTORE_B64" ]; then
+            echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/keys/release.p12"
+            echo "LIFEBOARD_KEYSTORE=/keys/release.p12" >> "$GITHUB_ENV"
+          else
+            echo "::warning::No ANDROID_KEYSTORE_B64 secret: building with a throwaway debug key"
+          fi
+
+      - name: Build
+        env:
+          LIFEBOARD_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          mkdir -p out
+          docker run --rm \
+            -v "$PWD":/src:ro -v "$PWD/out":/out -v "$RUNNER_TEMP/keys":/keys:ro \
+            -e LIFEBOARD_KEYSTORE="${LIFEBOARD_KEYSTORE:-}" \
+            -e LIFEBOARD_KEYSTORE_PASSWORD \
+            debian:bookworm bash /src/android/build-in-docker.sh
+          sudo chown -R "$(id -u):$(id -g)" out
+          cd out && sha256sum LifeBoard-standalone.apk > LifeBoard-standalone.apk.sha256
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LifeBoard-standalone
+          path: |
+            out/LifeBoard-standalone.apk
+            out/LifeBoard-standalone.apk.sha256
+
+      - name: Attach to the release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload "${{ github.event.release.tag_name }}" \
+            out/LifeBoard-standalone.apk out/LifeBoard-standalone.apk.sha256 --clobber

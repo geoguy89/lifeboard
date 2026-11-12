@@ -107,8 +107,16 @@ done < <(find "$WORK/web/render" "$WORK/web/admin" -name '*.js' ! -name 'compat.
 echo "    $lowered files lowered to ES2017 (Chrome 61+), compat.js left as ES5"
 
 cd "$WORK/android"
-echo "==> gradle assembleDebug"
-gradle --no-daemon --console=plain assembleDebug
+# A signed release build when a key is supplied (LIFEBOARD_KEYSTORE and
+# LIFEBOARD_KEYSTORE_PASSWORD, see app/build.gradle); otherwise a debug build
+# with a throwaway key, which is fine for trying it out.
+if [ -n "${LIFEBOARD_KEYSTORE:-}" ]; then
+  TASK=assembleRelease
+else
+  TASK=assembleDebug
+fi
+echo "==> gradle $TASK"
+gradle --no-daemon --console=plain "$TASK"
 
 APK="$(find "$WORK/android/app/build/outputs/apk" -name '*.apk' | head -1)"
 [ -n "$APK" ] || { echo "no APK produced" >&2; exit 1; }
@@ -118,6 +126,12 @@ cp -f "$APK" "$OUT/LifeBoard-standalone.apk"
 echo
 echo "==> $OUT/LifeBoard-standalone.apk"
 ls -lh "$OUT/LifeBoard-standalone.apk" | awk '{print "    " $5}'
+SIGNER="$ANDROID_SDK_ROOT/build-tools/34.0.0/apksigner"
+if [ -x "$SIGNER" ]; then
+  echo "==> signed by"
+  "$SIGNER" verify --print-certs "$OUT/LifeBoard-standalone.apk" \
+    | grep -E "Signer #1 certificate (DN|SHA-256)" | sed 's/^/    /'
+fi
 
 # --- what actually ended up in it -----------------------------------------
 echo
