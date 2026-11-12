@@ -1,0 +1,188 @@
+plugins {
+    id "com.android.application"
+    id "com.chaquo.python"
+}
+
+android {
+    namespace "com.lifeboard.tv"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.lifeboard.tv"
+        // 24 (Android 7.0) because CHAQUOPY REQUIRES IT - the embedded Python
+        // runtime does not support anything older. The viewer half of this app
+        // would happily run on 21, and did; carrying a server is what costs
+        // the two versions.
+        //
+        // In practice that is nearly free for the target: the common ARMv7 TV
+        // boxes (the Amlogic S905 generation and later) ship Android 7.1.
+        // Anything genuinely stuck on 5.0 or 6.0 has to point at a board
+        // running elsewhere instead.
+        //
+        // targetSdk 29 on purpose: a kiosk that owns its own fullscreen, boot
+        // behaviour and a long-lived foreground service has a much easier time
+        // on the pre-30 contracts, and this is sideloaded rather than published
+        // so Play Store target requirements do not apply.
+        minSdk 24
+        targetSdk 29
+        versionCode 12
+        versionName "3.0"
+
+        ndk {
+            // ARMv7 is the ask. arm64 because every current device is one, and
+            // x86_64 so it can be run in an emulator to reproduce a fault
+            // without posting a TV. Each ABI carries its own CPython, which is
+            // most of the APK size.
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86_64"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false   // nothing here is big enough to need it
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    sourceSets {
+        main {
+            // The server is used AS IS from the repo rather than copied in, so
+            // there is exactly one copy of it and the APK cannot drift from
+            // what the Pi runs.
+            python.srcDirs = ["src/main/python", "../../server"]
+            assets.srcDirs = ["src/main/assets", "${buildDir}/lifeboard-assets"]
+        }
+    }
+
+    packagingOptions {
+        // Chaquopy ships these per ABI; nothing here reads them.
+        exclude "META-INF/*.kotlin_module"
+    }
+}
+
+chaquopy {
+    defaultConfig {
+        // 3.11 rather than the oldest available, and it is not arbitrary:
+        // main.py annotates FastAPI dependencies as `str | None`, and FastAPI
+        // resolves those annotations AT RUNTIME to work out what to inject.
+        // `from __future__ import annotations` defers the parse but
+        // get_type_hints still has to evaluate the expression, so anything
+        // below 3.10 raises TypeError on import rather than at a call site -
+        // which reads like a broken app, not a Python version problem.
+        version "3.11"
+
+        pip {
+            // fastapi 0.99.1 is the last release on pydantic v1.
+            //
+            // That matters more than it looks: pydantic v2 is a Rust extension
+            // (pydantic-core), and a 32-bit ARMv7 wheel for it may not exist -
+            // which would have quietly ruled out the whole platform this was
+            // asked for. v1 is pure Python.
+            //
+            // Nothing is lost by staying on v1 here, because the server does
+            // not define a single pydantic model: every endpoint takes a plain
+            // `payload: dict`. FastAPI's validation layer is barely touched.
+            install "fastapi==0.99.1"
+            install "pydantic==1.10.13"
+            install "uvicorn==0.22.0"
+            install "httpx==0.24.1"
+            // Pinned because pip resolved h11 0.16 while httpcore 0.17.3
+            // requires <0.15, and said so as an ERROR line in the middle of an
+            // otherwise successful build. Every outbound call the board makes -
+            // weather, calendars, Google and Microsoft tasks - goes through
+            // httpx, so an incompatible h11 is not a warning to move past.
+            install "h11==0.14.0"
+
+            // THE REST OF THE SERVER'S DEPENDENCIES.
+            //
+            // Missed on the first pass because the scan only looked at imports
+            // at the START of a line, and every one of these is imported
+            // lazily inside the function that needs it - which is good practice
+            // in the server and made them invisible to a naive grep. The
+            // symptom was a 502 from one RSS feed; the reality was that RSS,
+            // all iCal calendars, and every QR code were broken.
+            install "feedparser"              // RSS and Atom
+            install "icalendar"               // .ics calendars
+            install "recurring-ical-events"   // RRULE expansion
+            install "qrcode"                  // the setup and add-task codes
+            // Resolves a YouTube page link to a direct H.264 stream, which is
+            // what lets a WebView play a live feed at all - see
+            // providers/stream.py. Pure Python, so no ABI question.
+            install "yt-dlp"
+
+            // EVERY FILE UPLOAD DEPENDS ON THIS, AND NOTHING IMPORTS IT.
+            //
+            // FastAPI reaches for python-multipart itself, from inside
+            // request.form(). Our code never mentions it, so the AST scan that
+            // found the five lazily-imported packages above could not have
+            // found this one - it is not in our import graph at all, only in
+            // requirements.txt.
+            //
+            // Missing, the failure is unusually nasty: the error is raised
+            // while the browser is still streaming the body, so the connection
+            // is torn down mid-upload and the browser reports "Failed to
+            // fetch" with no status and no message. Uploading a 6MB Bible to a
+            // TV looked like a network fault. The media library never worked on
+            // Android either, for the same reason and just as silently.
+            install "python-multipart"
+
+            // Native, and the two worth watching on armeabi-v7a. Pillow backs
+            // qrcode's PNG output; cryptography encrypts stored OAuth tokens
+            // and degrades to plaintext with a warning if it is absent, which
+            // is not something to accept quietly on a device sitting in a
+            // living room.
+            install "Pillow"
+            install "cryptography"
+            // THE TIMEZONE DATABASE.
+            //
+            // zoneinfo reads /usr/share/zoneinfo, which Android does not have
+            // - it keeps its own tzdata in a different format that CPython
+            // cannot read. Without this package every ZoneInfo() call raises,
+            // /api/board returns 500, and the wall shows nothing while every
+            // other endpoint answers normally.
+            //
+            // The code now falls back to a fixed UTC rather than dying, but a
+            // board that silently ignores the timezone somebody set is its own
+            // kind of wrong: schedules fire at the wrong hour and the clock is
+            // off. This is what makes the setting mean anything.
+            install "tzdata"
+            // Everything else these pull in - starlette, anyio, sniffio, h11,
+            // httpcore, idna, certifi, click - is pure Python and needs no
+            // wheel of its own.
+        }
+
+        pyc {
+            // FALSE means "do not compile away the source". Chaquopy's default
+            // ships .pyc only, and a traceback from a .pyc gives a file and a
+            // line number with no line - which on a TV across the room, with no
+            // adb attached, is most of the diagnostic gone. The cost is a
+            // slightly slower first import.
+            src false
+        }
+    }
+}
+
+/**
+ * The board's web assets and templates, staged for packaging.
+ *
+ * Copied rather than referenced because Android assets must live under the
+ * module, and symlinking into a repo two directories up breaks the moment
+ * anyone builds this somewhere else. The copy is a build step, so the APK can
+ * never carry a stale copy of the renderer.
+ */
+tasks.register("stageBoardAssets", Copy) {
+    into "${buildDir}/lifeboard-assets"
+    into("web") { from "${rootDir}/../web" }
+    into("templates") { from "${rootDir}/../templates" }
+}
+
+tasks.configureEach { task ->
+    if (task.name.startsWith("merge") && task.name.endsWith("Assets")) {
+        task.dependsOn "stageBoardAssets"
+    }
+}

@@ -1,0 +1,89 @@
+{
+  "name": "Tasks",
+  "description": "A list you walk up to and cross off. Big rows, one column, and a ticked task takes itself off the board.",
+  "aspect": "portrait",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(180deg, #14181f 0%, #0b0d11 60%, #08090c 100%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 5,
+      "y": 3,
+      "w": 60,
+      "h": 8,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": false
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 66,
+      "y": 3,
+      "w": 29,
+      "h": 8,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "tasks",
+      "x": 5,
+      "y": 13,
+      "w": 90,
+      "h": 56,
+      "z": 0,
+      "config": {
+        "heading": "To do",
+        "backend": "local",
+        "group_by": "due",
+        "interactive": true,
+        "remove_when_done": true,
+        "show_header": true,
+        "show_count": true,
+        "show_due": true,
+        "max_items": 16,
+        "size": 2.6,
+        "title_lines": 2,
+        "empty_text": "Nothing left - well done"
+      }
+    },
+    {
+      "kind": "tasks",
+      "x": 5,
+      "y": 71,
+      "w": 43,
+      "h": 26,
+      "z": 0,
+      "config": {
+        "heading": "Shopping",
+        "backend": "local",
+        "group_by": "none",
+        "interactive": true,
+        "remove_when_done": true,
+        "show_due": false,
+        "max_items": 8,
+        "size": 2.2,
+        "empty_text": "Nothing needed"
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 51,
+      "y": 71,
+      "w": 44,
+      "h": 26,
+      "z": 0,
+      "config": {
+        "layout": "compact",
+        "days": 3,
+        "title": ""
+      }
+    }
+  ]
+}

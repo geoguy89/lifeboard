@@ -1,0 +1,56 @@
+{
+  "name": "Photo Wall (landscape)",
+  "description": "Full-bleed slideshow with a floating clock and weather.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "#0b0b0f",
+  "widgets": [
+    {
+      "kind": "photos",
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "h": 100,
+      "z": 0,
+      "config": {
+        "interval_seconds": 30,
+        "shuffle": true,
+        "fit": "cover"
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 3,
+      "y": 6,
+      "w": 40,
+      "h": 20,
+      "z": 1,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false
+      }
+    },
+    {
+      "kind": "date",
+      "x": 3,
+      "y": 27,
+      "w": 40,
+      "h": 6,
+      "z": 1,
+      "config": {}
+    },
+    {
+      "kind": "weather",
+      "x": 60,
+      "y": 78,
+      "w": 37,
+      "h": 18,
+      "z": 1,
+      "config": {
+        "layout": "compact",
+        "title": ""
+      }
+    }
+  ]
+}

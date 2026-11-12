@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LifeBoard</title>
+<style>
+  /* The board is a fixed-aspect canvas that fills the screen. Widgets are
+     positioned in PERCENT, so the same layout survives a resolution change or
+     a rotation without every block needing to be dragged again. */
+  :root {
+    --fg: #f2f3f5;
+    --fg-dim: #9aa0a8;
+    --panel: rgba(255,255,255,.04);
+    --panel-line: rgba(255,255,255,.08);
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    overflow: hidden;                 /* a wall display never scrolls */
+    background: #101014;
+    color: var(--fg);
+    font-family: Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+    /* Nothing here is interactive; killing selection and the touch callout
+       stops a stray touch or a cat on the keyboard leaving the board in a
+       highlighted state that nobody is present to clear. */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    cursor: none;                     /* no mouse pointer on a wall */
+  }
+
+  /* Full-bleed backdrop, behind everything. Its own element rather than a
+     body background so it can be blurred and dimmed without affecting the
+     widgets sitting on top of it. */
+  #backdrop {
+    position: fixed; inset: -2%;
+    background-size: cover; background-position: center; background-repeat: no-repeat;
+    z-index: 0;
+    transition: background-image .8s ease-in-out;
+  }
+  #backdrop::after {
+    content: ''; position: absolute; inset: 0;
+    background: #000; opacity: var(--dim, 0);
+  }
+
+  #board { position: relative; width: 100vw; height: 100vh; z-index: 1; }
+
+  #offline {
+    position: fixed; left: 1vmin; bottom: 1vmin;
+    font-size: 1.2vmin; color: #d9a06b;
+    background: rgba(0,0,0,.5); padding: .4vmin .8vmin; border-radius: 6px;
+    display: none;
+  }
+  body.offline #offline { display: block; }
+
+  /* Boot state, replaced on first successful load. Without this a slow first
+     fetch looks identical to a crashed appliance. */
+  #boot {
+    position: fixed; inset: 0; display: grid; place-items: center;
+    font-size: 2.4vmin; color: var(--fg-dim); letter-spacing: .1em;
+  }
+</style>
+<link rel="stylesheet" href="./board.css">
+</head>
+<body>
+  <div id="backdrop"></div>
+  <div id="board"></div>
+  <div id="boot">LIFEBOARD</div>
+  <div id="offline">offline &mdash; showing last known data</div>
+  <!-- Classic script, and FIRST. A module that fails to parse throws before
+       any module-scoped handler exists, so whatever is meant to catch that has
+       to already be running. This also polyfills replaceChildren, which the
+       renderer uses 54 times and which an Android System WebView older than
+       Chrome 86 does not have. -->
+  <script src="./compat.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

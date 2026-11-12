@@ -1,0 +1,120 @@
+{
+  "name": "Live over Photo",
+  "description": "A live video band with glass panels above and below it, over a photo backdrop.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "#000000",
+  "background_kind": "source",
+  "background_dim": 45,
+  "background_blur": 6,
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 4,
+      "y": 3,
+      "w": 57,
+      "h": 10,
+      "z": 0,
+      "panel": "none",
+      "config": {
+        "hour12": true,
+        "show_meridiem": false,
+        "weight": 200
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 62,
+      "y": 3.5,
+      "w": 34,
+      "h": 9,
+      "z": 0,
+      "panel": "none",
+      "config": {
+        "layout": "compact",
+        "title": ""
+      }
+    },
+    {
+      "kind": "date",
+      "x": 4,
+      "y": 13.5,
+      "w": 92,
+      "h": 4,
+      "z": 0,
+      "panel": "none",
+      "config": {
+        "short": true
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 4,
+      "y": 19,
+      "w": 92,
+      "h": 24,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "title": "Coming up",
+        "style": "agenda",
+        "max_items": 6
+      }
+    },
+    {
+      "kind": "video",
+      "x": 0,
+      "y": 45,
+      "w": 100,
+      "h": 28,
+      "z": 0,
+      "panel": "none",
+      "config": {
+        "engine": "auto",
+        "muted": true,
+        "loop": true,
+        "fit": "cover",
+        "reload_minutes": 180
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 4,
+      "y": 75,
+      "w": 44,
+      "h": 22,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "style": "minimonth"
+      }
+    },
+    {
+      "kind": "qr",
+      "x": 54,
+      "y": 75,
+      "w": 20,
+      "h": 22,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "mode": "wifi",
+        "caption": "Guest Wi-Fi"
+      }
+    },
+    {
+      "kind": "entity",
+      "x": 76,
+      "y": 75,
+      "w": 20,
+      "h": 22,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "title": "House",
+        "columns": 1
+      }
+    }
+  ]
+}

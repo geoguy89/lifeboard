@@ -1,0 +1,22 @@
+[Unit]
+Description=LifeBoard setup hotspot when no network is available
+# -wait-online, not just the service: "started" does not mean the wifi device
+# has been detected and taken under management, and nmcli issued in that window
+# fails because there is no device yet. The wait has its own timeout, so a
+# board with no network still proceeds to raise the setup hotspot.
+After=NetworkManager.service NetworkManager-wait-online.service
+Wants=NetworkManager.service
+Before=lifeboard-server.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+# Runs as root: raising an access point needs it. Nothing here is reachable
+# from the network, it only reads link state and calls nmcli.
+ExecStart=/opt/lifeboard/deploy/firstboot.sh
+Environment=LIFEBOARD_NET_GRACE=45
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

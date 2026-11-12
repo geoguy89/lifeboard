@@ -1,0 +1,36 @@
+#!/bin/sh
+# NetworkManager dispatcher hook: captive portal for the setup hotspot.
+#
+# Installed as /etc/NetworkManager/dispatcher.d/90-lifeboard-setup.
+#
+# While the "lifeboard-setup" access point is up, plain HTTP arriving on it is
+# sent to the LifeBoard server on :8080. Together with
+# nm-dnsmasq-lifeboard-setup.conf (every name resolves to 10.42.0.1), a phone's
+# connectivity check lands on the server, which redirects it to the setup
+# page, and the phone opens that page by itself.
+#
+# Its own nftables table, so it never touches NetworkManager's rules, and it
+# is deleted when the hotspot goes down.
+
+IFACE="$1"
+ACTION="$2"
+[ "$CONNECTION_ID" = "lifeboard-setup" ] || exit 0
+command -v nft >/dev/null 2>&1 || exit 0
+
+case "$ACTION" in
+  up)
+    nft delete table ip lifeboard_setup 2>/dev/null
+    nft -f - <<EOF
+table ip lifeboard_setup {
+  chain prerouting {
+    type nat hook prerouting priority dstnat; policy accept;
+    iifname "$IFACE" tcp dport 80 redirect to :8080
+  }
+}
+EOF
+    ;;
+  down|pre-down)
+    nft delete table ip lifeboard_setup 2>/dev/null
+    ;;
+esac
+exit 0

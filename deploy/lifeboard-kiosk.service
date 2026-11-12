@@ -1,0 +1,43 @@
+[Unit]
+Description=LifeBoard kiosk display
+After=lifeboard-server.service systemd-user-sessions.service
+Wants=lifeboard-server.service
+
+[Service]
+Type=simple
+User=lifeboard
+Group=lifeboard
+PAMName=login
+TTYPath=/dev/tty7
+Environment=LIFEBOARD_SCREEN_ID=1
+
+# startx rather than a display manager: no login screen, no desktop, nothing
+# to alt-tab to. The display is an output, not a computer you can sit at -
+# which is the "no local access other than the display" requirement.
+# PAMName=login puts X and Chromium in a PAM SESSION SCOPE
+# (/user.slice/user-999.slice/session-N.scope), not this unit's cgroup. So
+# `systemctl stop` kills startx and leaves Xorg and every Chromium process
+# running - they keep owning :0 and vt7, the replacement session cannot take
+# the display, and the board goes on showing the old page forever. A restart
+# appeared to succeed while changing nothing at all.
+#
+# So the leftovers are cleared explicitly, before starting as well as after
+# stopping: a stale session from a crash must not block the next start either.
+# `exit 0` because pkill returns 1 when it matches nothing, which is the normal
+# case and must not fail the unit.
+ExecStartPre=/bin/sh -c 'pkill -u lifeboard -x chromium 2>/dev/null; pkill -u lifeboard -x Xorg 2>/dev/null; sleep 1; exit 0'
+ExecStart=/usr/bin/startx /opt/lifeboard/deploy/kiosk.sh -- :0 vt7 -nolisten tcp -noreset
+ExecStopPost=/bin/sh -c 'pkill -u lifeboard -x chromium 2>/dev/null; pkill -u lifeboard -x Xorg 2>/dev/null; exit 0'
+
+# Without this the stop above waits the full 90s default before SIGKILL, which
+# is what turned a restart into a minute and a half of a frozen board.
+TimeoutStopSec=15
+
+Restart=always
+RestartSec=5
+
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=graphical.target

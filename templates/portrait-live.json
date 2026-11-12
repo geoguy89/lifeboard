@@ -1,0 +1,86 @@
+{
+  "name": "Live Feed",
+  "description": "A muted live video panel up top with the schedule and a news ticker below.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "#0b0b0f",
+  "widgets": [
+    {
+      "kind": "video",
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "h": 30,
+      "z": 0,
+      "config": {
+        "muted": true,
+        "loop": true,
+        "fit": "cover",
+        "reload_minutes": 180
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 0,
+      "y": 31.5,
+      "w": 100,
+      "h": 11,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false
+      }
+    },
+    {
+      "kind": "date",
+      "x": 0,
+      "y": 42.5,
+      "w": 100,
+      "h": 4.5,
+      "z": 0,
+      "config": {
+        "short": true
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 4,
+      "y": 48,
+      "w": 92,
+      "h": 13,
+      "z": 0,
+      "config": {
+        "title": "",
+        "days": 5
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 4,
+      "y": 63,
+      "w": 92,
+      "h": 26,
+      "z": 0,
+      "config": {
+        "title": "Coming up",
+        "style": "agenda",
+        "max_items": 8
+      }
+    },
+    {
+      "kind": "rss",
+      "x": 4,
+      "y": 91,
+      "w": 92,
+      "h": 7,
+      "z": 0,
+      "config": {
+        "title": "",
+        "style": "ticker",
+        "rotate_seconds": 12,
+        "size": 1.9
+      }
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LifeBoard</title>
+<style>
+  /* Dark is the default because this UI is most often opened next to a board
+     that is itself dark, and a white flash at 6am is unwelcome. Light is a
+     full preset rather than an inversion, so contrast is actually right in
+     both rather than merely legal. */
+  :root, :root[data-theme="dark"] {
+    --bg: #0e0f13; --panel: #16181f; --panel-2: #1d2029;
+    --line: #272b36; --fg: #e8eaf0; --dim: #8b93a3;
+    --accent: #5b9dd9; --good: #7fb069; --warn: #d9a06b; --bad: #d98b8b;
+    --radius: 10px;
+    color-scheme: dark;
+  }
+
+  :root[data-theme="light"] {
+    --bg: #f4f5f8; --panel: #ffffff; --panel-2: #eef0f5;
+    --line: #d7dbe4; --fg: #1a1d24; --dim: #5f6672;
+    --accent: #2f6fad; --good: #4c7c37; --warn: #a4692a; --bad: #a63d3d;
+    --radius: 10px;
+    color-scheme: light;
+  }
+
+  /* "System" follows the machine the admin UI is being viewed on, which is a
+     laptop, not the appliance. */
+  @media (prefers-color-scheme: light) {
+    :root[data-theme="system"] {
+      --bg: #f4f5f8; --panel: #ffffff; --panel-2: #eef0f5;
+      --line: #d7dbe4; --fg: #1a1d24; --dim: #5f6672;
+      --accent: #2f6fad; --good: #4c7c37; --warn: #a4692a; --bad: #a63d3d;
+      color-scheme: light;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.5 Inter, "Segoe UI", system-ui, sans-serif;
+  }
+  a { color: var(--accent); }
+  button, input, select, textarea {
+    font: inherit; color: inherit;
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 8px; padding: .45rem .7rem;
+  }
+  button { cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent);
+    color: var(--on-accent, #08131d); font-weight: 600; }
+  button.danger { color: var(--bad); }
+  input[type=checkbox] { width: 1.05rem; height: 1.05rem; accent-color: var(--accent); }
+  label { display: block; font-size: .82rem; color: var(--dim); margin-bottom: .2rem; }
+
+  /* A left rail rather than a row of tabs. The editor is wide and short of
+     height, so a strip across the top was the one direction that could not
+     spare the space. */
+  #app { display: grid; grid-template-columns: 200px 1fr; min-height: 100vh; }
+  #sidebar {
+    background: var(--panel); border-right: 1px solid var(--line);
+    padding: 1rem .6rem; position: sticky; top: 0; align-self: start;
+    height: 100vh; overflow: auto;
+  }
+  #sidebar h1 {
+    font-size: .95rem; margin: .2rem .5rem 1.1rem; letter-spacing: .18em;
+    font-weight: 600; color: var(--fg);
+  }
+  nav { display: flex; flex-direction: column; gap: .1rem; }
+  nav button, a.nav-link {
+    display: flex; align-items: center; gap: .6rem; width: 100%;
+    background: transparent; border: 1px solid transparent; color: var(--dim);
+    padding: .45rem .55rem; border-radius: 7px; font-size: .87rem;
+    text-align: left; text-decoration: none; cursor: pointer;
+  }
+  nav button:hover, a.nav-link:hover { color: var(--fg); background: var(--panel-2); }
+  nav button.active {
+    background: var(--panel-2); border-color: var(--line); color: var(--fg);
+  }
+  /* The accent bar is what makes the current page obvious at a glance in a
+     list where every row is the same size. */
+  nav button.active { box-shadow: inset 2px 0 0 var(--accent); }
+  .nav-group {
+    font-size: .68rem; text-transform: uppercase; letter-spacing: .1em;
+    color: var(--dim); opacity: .7; margin: 1rem .6rem .3rem;
+  }
+
+  main { padding: 1.2rem; max-width: 1500px; margin: 0 auto; width: 100%; }
+
+  /* One column on a phone: a 200px rail on a 380px screen leaves nothing
+     for the thing you came to edit. */
+  @media (max-width: 720px) {
+    #app { grid-template-columns: 1fr; }
+    #sidebar { height: auto; position: static; border-right: none;
+               border-bottom: 1px solid var(--line); }
+    nav { flex-direction: row; flex-wrap: wrap; }
+    .nav-group { width: 100%; margin: .5rem .6rem .2rem; }
+  }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; }
+  .card h2 { margin: 0 0 .2rem; font-size: 1rem; }
+  .card p.hint { margin: 0 0 .9rem; color: var(--dim); font-size: .85rem; }
+  .row { display: flex; gap: .8rem; flex-wrap: wrap; align-items: flex-end; }
+  .row > * { flex: 1 1 180px; }
+  .row > .narrow { flex: 0 0 120px; }
+  .grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+
+  .pill { display: inline-block; font-size: .72rem; padding: .1rem .5rem; border-radius: 999px; border: 1px solid var(--line); color: var(--dim); }
+  .pill.ok { color: var(--good); border-color: #2c4a26; }
+  .pill.err { color: var(--bad); border-color: #4a2626; }
+
+  /* ---- template gallery ---- */
+  .tpl { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--radius); padding: .8rem; display: flex; flex-direction: column; gap: .5rem; }
+  .tpl-preview { background: #0a0a0e; border: 1px solid var(--line); border-radius: 6px; position: relative; overflow: hidden; }
+  .tpl-sketch { position: absolute; inset: 0; }
+  .tpl-preview i { position: absolute; background: rgba(91,157,217,.30); border: 1px solid rgba(91,157,217,.55); border-radius: 2px; }
+  .tpl h3 { margin: 0; font-size: .95rem; }
+  .tpl p { margin: 0; font-size: .8rem; color: var(--dim); flex: 1; }
+
+  /* ---- layout editor ---- */
+  #editor-wrap { display: grid; grid-template-columns: 1fr 320px; gap: 1rem; align-items: start; }
+  /* The editor bar. Two groups on one slim row, so the canvas keeps the
+     height that a stacked settings card used to eat. */
+  #editor-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .75rem; flex-wrap: wrap;
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: .45rem .6rem; margin-bottom: .75rem;
+    position: sticky; top: 0; z-index: 20;
+  }
+  #editor-bar .bar-left, #editor-bar .bar-right {
+    display: flex; align-items: center; gap: .4rem; flex-wrap: wrap;
+  }
+  #editor-bar select { margin: 0; height: 1.9rem; padding: 0 .4rem; }
+  #editor-bar .bar-label { font-size: .74rem; color: var(--dim); }
+  #editor-bar .bar-sep {
+    width: 1px; height: 1.3rem; background: var(--line); margin: 0 .15rem;
+  }
+  button.tool {
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--fg);
+    border-radius: 6px; padding: .25rem .55rem; font-size: .78rem;
+    line-height: 1.4; cursor: pointer;
+  }
+  button.tool:hover { border-color: var(--accent); }
+
+  /* Scrolls once zoomed past the pane, rather than pushing the props panel
+     off the screen. */
+  /* ZOOM: the stage keeps the size the zoom asked for, and the pane scrolls.
+     A flex item shrinks by default, so at any zoom past "fits the pane" the
+     stage was quietly squashed while the preview inside it was still being
+     scaled from the width the zoom INTENDED. Painting and drag boxes were then
+     computed from two different numbers, and the boxes drifted off the picture
+     - which defeats the whole point of zooming in to place something exactly.
+     `safe center` keeps it centred while it fits and stops centring once it
+     overflows, so the left edge stays reachable; browsers that do not know it
+     fall back to the plain `center` above. */
+  #stage-outer { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; display: flex; justify-content: center; justify-content: safe center; overflow: auto; max-height: 82vh; }
+  #stage { position: relative; background: #0a0a0e; border: 1px solid var(--line); overflow: hidden; flex: 0 0 auto; }
+  /* The block is a HIT TARGET over the live preview, not a picture of the
+     widget - the iframe behind it draws the real thing. So it is transparent
+     by default and only outlines itself, or the previews would be invisible
+     under a stack of blue rectangles. The label sits in a small chip rather
+     than across the block, so it never covers the content it describes. */
+  /* OUTLINES, NOT BORDERS. A border sits inside the box and pushes children
+     in by a pixel; an outline drawn at offset -1px traces the box's real edge
+     and moves nothing, so the content outline (.ink) lines up exactly with
+     the preview underneath. Square corners for the same reason: a rounded
+     outline hides where the box actually ends.
+
+     Two outlines per block:
+       the BOX   - the whole area the block owns, faint and dashed;
+       the INK   - what the block actually draws, solid. This is the one to
+                   line things up with. */
+  .w {
+    position: absolute; background: transparent; border: 0;
+    outline: 1px dashed rgba(91,157,217,.32); outline-offset: -1px;
+    cursor: move; overflow: hidden;
+    font-size: 11px; color: #cfd6e2; user-select: none; z-index: 1;
+  }
+  .w.locked { outline-style: dotted; }
+  .w:hover { background: rgba(91,157,217,.07); outline-color: rgba(91,157,217,.6); }
+  /* A block that moves with the selection but is not the primary one:
+     visibly grouped, without the handles that would imply it can be
+     resized on its own. */
+  .w.co-sel { background: rgba(91,157,217,.08); outline: 1px solid rgba(91,157,217,.75); }
+  .w.sel { background: rgba(91,157,217,.08); outline: 1px solid var(--accent); }
+  .w .ink {
+    position: absolute; pointer-events: none;
+    outline: 1px solid rgba(124,212,255,.85); outline-offset: 0;
+  }
+  .w.sel .ink { outline: 1px solid #9fe1ff; box-shadow: 0 0 0 1px rgba(0,0,0,.55); }
+  .w.resizing .ink { display: none; }
+  /* Alignment guides while dragging: a content edge or centre has lined up
+     with another block's content, or with the middle of the board. */
+  .guide { position: absolute; display: none; z-index: 30; pointer-events: none; }
+  .guide-v { top: 0; bottom: 0; width: 0; border-left: 1px solid #ff4fd8; }
+  .guide-h { left: 0; right: 0; height: 0; border-top: 1px solid #ff4fd8; }
+  .w .tag {
+    position: absolute; left: 0; top: 0; max-width: 100%;
+    padding: 1px 4px; font-size: 10px; line-height: 1.35;
+    background: rgba(10,10,14,.72); color: #cfd6e2;
+    border-radius: 0 0 4px 0; pointer-events: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .w.sel .tag { background: var(--accent); color: #0a0a0e; }
+  /* With previews behind them, permanent labels are clutter - the toolbar
+     has a toggle. The selected block always keeps its label. */
+  #stage.hide-tags .w:not(.sel) .tag { display: none; }
+  .w .grip { position: absolute; right: 0; bottom: 0; width: 12px; height: 12px; background: var(--accent); cursor: nwse-resize; border-radius: 2px 0 0 0; }
+  #props { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; position: sticky; top: 4.5rem; max-height: 82vh; overflow: auto; }
+  /* Properties tabs: data / appearance / when. Sticky so they stay reachable
+     while scrolling a long settings list. */
+  .prop-tabs {
+    display: flex; gap: .25rem; margin-bottom: .8rem;
+    border-bottom: 1px solid var(--line); position: sticky; top: 0;
+    background: var(--panel); z-index: 2; padding-top: .1rem;
+  }
+  button.prop-tab {
+    background: none; border: none; border-bottom: 2px solid transparent;
+    color: var(--dim); padding: .35rem .55rem; font-size: .82rem;
+    cursor: pointer; border-radius: 0;
+  }
+  button.prop-tab:hover { color: var(--fg); }
+  button.prop-tab.on { color: var(--fg); border-bottom-color: var(--accent); }
+  #props .field { margin-bottom: .7rem; }
+  #props .field .help { font-size: .74rem; color: var(--dim); margin-top: .15rem; }
+  #palette { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: .4rem; }
+  #palette button { display: flex; flex-direction: column; gap: .15rem; align-items: center; font-size: .74rem; padding: .5rem .3rem; }
+  #palette button span.i { font-size: 1.2rem; }
+
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: .5rem .4rem; border-bottom: 1px solid var(--line); font-size: .88rem; vertical-align: middle; }
+  th { color: var(--dim); font-weight: 500; font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; }
+
+  #toast { position: fixed; right: 1rem; bottom: 1rem; background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--accent); padding: .6rem .9rem; border-radius: 8px; opacity: 0; transition: opacity .25s; pointer-events: none; z-index: 50; max-width: 380px; }
+  #toast.show { opacity: 1; }
+  #toast.bad { border-left-color: var(--bad); }
+
+  #gate { max-width: 380px; margin: 12vh auto; }
+  .muted { color: var(--dim); font-size: .85rem; }
+
+  /* A warning that has to be read before a click, not a toast after it. The
+     left rule and the tinted ground are what stop it reading as more hint
+     text - which is exactly what the credentials notice must not do. */
+  p.warn { color: var(--warn); font-size: .85rem; margin: .2rem 0 .6rem;
+           border-left: 3px solid var(--warn); padding: .5rem .7rem;
+           background: color-mix(in srgb, var(--warn) 10%, transparent);
+           border-radius: 0 6px 6px 0; }
+
+  /* Checkbox and its label on one baseline. Without this the box sits on the
+     text baseline and every row is a pixel or two out from the next. */
+  label.check { display: flex; align-items: center; gap: .45rem;
+                font-size: .85rem; color: var(--fg); margin: .25rem 0;
+                font-weight: 400; cursor: pointer; }
+  label.check input { width: auto; margin: 0; flex: 0 0 auto; }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="toast"></div>
+  <!-- Same reasoning as the renderer: a classic script first, so a parse
+       failure in the module has somewhere to report itself. -->
+  <script src="./compat.js"></script>
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>

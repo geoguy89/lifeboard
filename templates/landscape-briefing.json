@@ -1,0 +1,120 @@
+{
+  "name": "Morning Briefing",
+  "description": "A wall of feeds to read like a paper over breakfast, with the next twelve hours of weather across the top.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(170deg, #101319 0%, #08090c 60%)",
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 2,
+      "y": 2,
+      "w": 20,
+      "h": 15,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "date",
+      "x": 2,
+      "y": 18,
+      "w": 20,
+      "h": 7,
+      "z": 0,
+      "config": {
+        "short": true,
+        "weekday": true
+      }
+    },
+    {
+      "kind": "weather_hourly",
+      "x": 24,
+      "y": 2,
+      "w": 48,
+      "h": 23,
+      "z": 0,
+      "config": {
+        "hours": 12,
+        "show_precip": true,
+        "show_wind": false,
+        "title": "Next 12 hours"
+      }
+    },
+    {
+      "kind": "air_quality",
+      "x": 74,
+      "y": 2,
+      "w": 24,
+      "h": 23,
+      "z": 0,
+      "config": {
+        "title": "Air",
+        "show_detail": true
+      }
+    },
+    {
+      "kind": "rss",
+      "x": 2,
+      "y": 27,
+      "w": 32,
+      "h": 71,
+      "z": 0,
+      "config": {
+        "title": "Headlines",
+        "style": "list",
+        "max_items": 7,
+        "show_summary": true,
+        "summary_lines": 2,
+        "show_age": true,
+        "show_source": true
+      }
+    },
+    {
+      "kind": "rss",
+      "x": 36,
+      "y": 27,
+      "w": 32,
+      "h": 71,
+      "z": 0,
+      "config": {
+        "title": "Tech",
+        "style": "list",
+        "max_items": 7,
+        "show_summary": true,
+        "summary_lines": 2,
+        "show_age": true,
+        "show_source": true
+      }
+    },
+    {
+      "kind": "on_this_day",
+      "x": 70,
+      "y": 27,
+      "w": 28,
+      "h": 34,
+      "z": 0,
+      "config": {
+        "title": "On this day",
+        "size": 2
+      }
+    },
+    {
+      "kind": "word_of_day",
+      "x": 70,
+      "y": 63,
+      "w": 28,
+      "h": 35,
+      "z": 0,
+      "config": {
+        "title": "Word of the day",
+        "capitalise": true,
+        "show_attribution": true
+      }
+    }
+  ]
+}

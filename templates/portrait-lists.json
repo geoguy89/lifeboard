@@ -1,0 +1,72 @@
+{
+  "name": "Team List",
+  "description": "One SharePoint list, large. Walk up, read it, tick a row off.",
+  "aspect": "portrait",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(180deg, #121620 0%, #0a0c11 60%, #08090c 100%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 5,
+      "y": 3,
+      "w": 58,
+      "h": 8,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": false
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 65,
+      "y": 3,
+      "w": 30,
+      "h": 8,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "splist",
+      "x": 4,
+      "y": 13,
+      "w": 92,
+      "h": 62,
+      "z": 0,
+      "config": {
+        "heading": "Open jobs",
+        "interactive": true,
+        "remove_when_done": true,
+        "show_header": true,
+        "show_columns": true,
+        "max_items": 14,
+        "size": 2.6,
+        "refresh_minutes": 5,
+        "empty_text": "Nothing open"
+      }
+    },
+    {
+      "kind": "splist",
+      "x": 4,
+      "y": 77,
+      "w": 92,
+      "h": 21,
+      "z": 0,
+      "config": {
+        "heading": "Waiting on",
+        "interactive": false,
+        "show_header": true,
+        "show_columns": false,
+        "max_items": 4,
+        "size": 2.1,
+        "refresh_minutes": 10,
+        "empty_text": "Nothing waiting"
+      }
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "name": "The Big Day",
+  "description": "A countdown as the point of the board rather than a footnote - two of them over a full-bleed photo, for a holiday, a birthday, or somebody coming home.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "#000000",
+  "widgets": [
+    {
+      "kind": "photos",
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "h": 100,
+      "z": 0,
+      "config": {
+        "fit": "cover",
+        "shuffle": true,
+        "interval_seconds": 60,
+        "transition_ms": 1500
+      }
+    },
+    {
+      "kind": "shape",
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "h": 100,
+      "z": 1,
+      "config": {
+        "shape": "rect",
+        "fill": "#000000",
+        "opacity": 0.5,
+        "border_width": 0
+      }
+    },
+    {
+      "kind": "countdown",
+      "x": 7,
+      "y": 14,
+      "w": 40,
+      "h": 32,
+      "z": 2,
+      "config": {
+        "title": "Vacation",
+        "max_size": 15
+      }
+    },
+    {
+      "kind": "countdown",
+      "x": 53,
+      "y": 14,
+      "w": 40,
+      "h": 32,
+      "z": 2,
+      "config": {
+        "title": "Birthday",
+        "max_size": 15
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 7,
+      "y": 56,
+      "w": 40,
+      "h": 22,
+      "z": 2,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 200
+      }
+    },
+    {
+      "kind": "date",
+      "x": 7,
+      "y": 79,
+      "w": 40,
+      "h": 9,
+      "z": 2,
+      "config": {
+        "weekday": true,
+        "short": false
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 53,
+      "y": 56,
+      "w": 40,
+      "h": 32,
+      "z": 2,
+      "config": {
+        "layout": "compact",
+        "days": 4,
+        "title": ""
+      }
+    }
+  ]
+}

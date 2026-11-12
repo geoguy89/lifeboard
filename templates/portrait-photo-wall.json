@@ -1,0 +1,60 @@
+{
+  "name": "Photo Wall",
+  "description": "Full-bleed slideshow with the time and weather floated over the top. The one to use in a hallway.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "#0b0b0f",
+  "widgets": [
+    {
+      "kind": "photos",
+      "x": 0,
+      "y": 0,
+      "w": 100,
+      "h": 100,
+      "z": 0,
+      "config": {
+        "interval_seconds": 30,
+        "shuffle": true,
+        "fit": "cover",
+        "transition_ms": 1500
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 0,
+      "y": 4,
+      "w": 100,
+      "h": 12,
+      "z": 1,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false,
+        "weight": 200
+      }
+    },
+    {
+      "kind": "date",
+      "x": 0,
+      "y": 16,
+      "w": 100,
+      "h": 4.5,
+      "z": 1,
+      "config": {
+        "short": false
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 25,
+      "y": 86,
+      "w": 50,
+      "h": 11,
+      "z": 1,
+      "config": {
+        "layout": "compact",
+        "title": ""
+      }
+    }
+  ]
+}

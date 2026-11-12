@@ -1,0 +1,104 @@
+{
+  "name": "Team Lists",
+  "description": "Three SharePoint or Microsoft Lists side by side, sized to be read and tapped from arm's length. For a shop floor or an office wall.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(160deg, #121620 0%, #090b10 65%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 2,
+      "y": 2,
+      "w": 30,
+      "h": 10,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": false
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 34,
+      "y": 2,
+      "w": 26,
+      "h": 10,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 62,
+      "y": 2,
+      "w": 36,
+      "h": 10,
+      "z": 0,
+      "config": {
+        "layout": "compact",
+        "days": 3,
+        "title": ""
+      }
+    },
+    {
+      "kind": "splist",
+      "x": 2,
+      "y": 14,
+      "w": 31,
+      "h": 84,
+      "z": 0,
+      "config": {
+        "heading": "Open jobs",
+        "interactive": true,
+        "remove_when_done": true,
+        "show_header": true,
+        "show_columns": true,
+        "max_items": 12,
+        "size": 2.1,
+        "refresh_minutes": 5,
+        "empty_text": "Nothing open"
+      }
+    },
+    {
+      "kind": "splist",
+      "x": 34,
+      "y": 14,
+      "w": 31,
+      "h": 84,
+      "z": 0,
+      "config": {
+        "heading": "Waiting on parts",
+        "interactive": false,
+        "show_header": true,
+        "show_columns": true,
+        "max_items": 12,
+        "size": 2.1,
+        "refresh_minutes": 5,
+        "empty_text": "Nothing waiting"
+      }
+    },
+    {
+      "kind": "splist",
+      "x": 66,
+      "y": 14,
+      "w": 32,
+      "h": 84,
+      "z": 0,
+      "config": {
+        "heading": "This week",
+        "interactive": true,
+        "remove_when_done": true,
+        "show_header": true,
+        "show_columns": true,
+        "max_items": 12,
+        "size": 2.1,
+        "refresh_minutes": 5,
+        "empty_text": "Clear"
+      }
+    }
+  ]
+}

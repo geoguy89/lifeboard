@@ -1,0 +1,93 @@
+{
+  "name": "Glass over Photo",
+  "description": "Full-bleed photo slideshow with frosted panels floating on it. The look most community boards use.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "#000000",
+  "background_kind": "source",
+  "background_dim": 40,
+  "background_blur": 0,
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 4,
+      "y": 4,
+      "w": 92,
+      "h": 13,
+      "z": 0,
+      "panel": "none",
+      "config": {
+        "hour12": true,
+        "show_meridiem": false,
+        "weight": 200
+      }
+    },
+    {
+      "kind": "date",
+      "x": 4,
+      "y": 17.5,
+      "w": 92,
+      "h": 4.5,
+      "z": 0,
+      "panel": "none",
+      "config": {
+        "short": false
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 4,
+      "y": 24,
+      "w": 92,
+      "h": 14,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "title": "",
+        "days": 5
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 4,
+      "y": 40,
+      "w": 92,
+      "h": 34,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "title": "Coming up",
+        "style": "agenda",
+        "max_items": 10
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 4,
+      "y": 76,
+      "w": 44,
+      "h": 21,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "style": "minimonth"
+      }
+    },
+    {
+      "kind": "rss",
+      "x": 52,
+      "y": 76,
+      "w": 44,
+      "h": 21,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "title": "News",
+        "style": "list",
+        "max_items": 2,
+        "show_age": true
+      }
+    }
+  ]
+}

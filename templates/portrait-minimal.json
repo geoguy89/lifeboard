@@ -1,0 +1,46 @@
+{
+  "name": "Minimal",
+  "description": "Just the time, the date and the weather. Enormous type, readable across a room.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "#0b0b0f",
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 0,
+      "y": 22,
+      "w": 100,
+      "h": 26,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false,
+        "weight": 150
+      }
+    },
+    {
+      "kind": "date",
+      "x": 0,
+      "y": 49,
+      "w": 100,
+      "h": 7,
+      "z": 0,
+      "config": {
+        "short": false
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 10,
+      "y": 60,
+      "w": 80,
+      "h": 16,
+      "z": 0,
+      "config": {
+        "layout": "compact",
+        "title": ""
+      }
+    }
+  ]
+}

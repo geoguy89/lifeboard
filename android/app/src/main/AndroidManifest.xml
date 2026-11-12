@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+>
+
+    <!-- minSdk 21 covers Android 5.0, which is where the cheap ARMv7 TV boxes
+         live. targetSdk is deliberately below 30: a kiosk that keeps its own
+         fullscreen and boot behaviour is easier on the older contracts, and
+         nothing here is going near Play Store requirements. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- The server runs in a foreground service so Android keeps it alive
+         while the box is showing its own launcher or another app. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!-- A touch screen is the whole point, but declaring it REQUIRED would
+         stop the app installing on a TV box whose touch frame is a USB device
+         the system reports as a mouse. -->
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+
+    <application
+        android:label="LifeBoard"
+        android:icon="@drawable/ic_launcher"
+        android:banner="@drawable/ic_launcher"
+        android:allowBackup="false"
+        android:supportsRtl="true"
+        android:hardwareAccelerated="true"
+        android:usesCleartextTraffic="true"
+        android:theme="@android:style/Theme.Material.NoActionBar.Fullscreen">
+
+        <activity
+            android:name=".BoardActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|keyboardHidden|navigation|uiMode|density|smallestScreenSize|screenLayout">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!-- LEANBACK_LAUNCHER so it appears on an Android TV home
+                     screen, which does not show ordinary launcher icons. -->
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Material"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <activity
+            android:name=".CalibrationActivity"
+            android:exported="false"
+            android:configChanges="keyboardHidden" />
+
+        <!-- The board itself. Sticky, so a process reclaimed under memory
+             pressure comes back rather than leaving a dead wall. -->
+        <service
+            android:name=".ServerService"
+            android:exported="false"
+            android:stopWithTask="false" />
+
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>

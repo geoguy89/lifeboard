@@ -1,0 +1,73 @@
+{
+  "name": "Operations",
+  "description": "A Planner board and a SharePoint list on one wall - what is moving on the left, what is outstanding on the right.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(150deg, #121620 0%, #0a0c11 55%, #08090c 100%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 2,
+      "y": 2,
+      "w": 30,
+      "h": 9,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": true
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 70,
+      "y": 2,
+      "w": 28,
+      "h": 9,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "kanban",
+      "x": 2,
+      "y": 13,
+      "w": 62,
+      "h": 85,
+      "z": 0,
+      "config": {
+        "backend": "planner",
+        "direction": "horizontal",
+        "interactive": true,
+        "default_action": "next",
+        "show_actions": true,
+        "max_per_column": 8,
+        "size": 1.5,
+        "refresh_minutes": 5,
+        "empty_text": "Pick a plan on the Sources tab"
+      }
+    },
+    {
+      "kind": "splist",
+      "x": 66,
+      "y": 13,
+      "w": 32,
+      "h": 85,
+      "z": 0,
+      "config": {
+        "heading": "Outstanding",
+        "interactive": true,
+        "remove_when_done": true,
+        "show_header": true,
+        "show_columns": true,
+        "max_items": 14,
+        "size": 1.9,
+        "refresh_minutes": 5,
+        "empty_text": "Nothing outstanding"
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+[Unit]
+Description=LifeBoard dashboard server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lifeboard
+Group=lifeboard
+Environment=LIFEBOARD_DB=/var/lib/lifeboard/lifeboard.db
+Environment=LIFEBOARD_WEB=/opt/lifeboard/web
+Environment=LIFEBOARD_TEMPLATES=/opt/lifeboard/templates
+Environment=LIFEBOARD_DISPLAY=:0
+# Where the kiosk publishes the X cookie. ProtectHome and PrivateTmp below
+# hide the two places X normally keeps it, so without this the server cannot
+# authenticate to the display: no rotation, and mpv opens no window.
+Environment=XAUTHORITY=/var/lib/lifeboard/xauth
+WorkingDirectory=/opt/lifeboard/server
+ExecStart=/opt/lifeboard/venv/bin/uvicorn lifeboard.main:app --host 0.0.0.0 --port 8080
+
+# A dashboard must come back from anything, including its own bugs.
+Restart=always
+RestartSec=5
+
+# Hardening. The service needs to write only its own state directory, and
+# needs to reach the X socket to drive DPMS - nothing else.
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/lifeboard
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+
+# journald only; nothing writes log files to the SD card / SSD.
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

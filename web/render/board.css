@@ -1,0 +1,118 @@
+/* Block chrome, shared by the wall (render/index.html) and the layout
+   editor's preview (admin/preview.html). One file, so the editor draws a
+   block's padding, border and frame exactly where the wall does. */
+
+.widget {
+  position: absolute;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; min-height: 0;
+}
+
+/* Panel chrome is per widget so a full-bleed video or photo can sit edge to
+   edge while a calendar gets a card. Four styles, because a board over a
+   photo needs different treatment from one on a flat colour. */
+.widget.panel-solid {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--radius);
+  padding: 1.2vmin 1.6vmin;
+}
+/* WITHOUT backdrop-filter (Chrome 76), a glass panel is just 38% opaque
+   dark over a photograph, and white text on a bright sky becomes unreadable.
+   The blur is what was providing the contrast, so where it is unavailable
+   the background has to provide it instead. Darker and flatter is less
+   pretty and still legible, which is the right trade on a wall nobody can
+   squint at. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .widget.panel-glass { background: rgba(12, 14, 20, .74); }
+  .widget.panel-frost { background: rgba(10, 12, 18, .78); }
+}
+
+/* Frosted glass — the look almost every photo-backed community board uses.
+   backdrop-filter is GPU work; on a Pi keep it to two or three panels. */
+.widget.panel-glass {
+  background: rgba(12, 14, 20, .38);
+  backdrop-filter: blur(14px) saturate(120%);
+  -webkit-backdrop-filter: blur(14px) saturate(120%);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: var(--radius);
+  padding: 1.2vmin 1.6vmin;
+}
+
+/* Lit glass — the panel from the concept boards.
+   What separates glass from a translucent rectangle is the LIGHTING: a
+   bright rim, a highlight running along the top edge where light catches
+   it, and a shadow beneath so the pane sits above the wallpaper rather
+   than being painted onto it. The inset highlight does most of the work. */
+.widget.panel-lumen {
+  background: linear-gradient(
+    160deg,
+    rgba(255,255,255,.16) 0%,
+    rgba(255,255,255,.06) 38%,
+    rgba(10,12,18,.30) 100%);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  border: 1px solid rgba(255,255,255,.30);
+  border-radius: calc(var(--radius) * 1.8);
+  padding: 1.4vmin 1.8vmin;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.55),
+    inset 0 -1px 0 rgba(255,255,255,.10),
+    0 4px 18px rgba(0,0,0,.28);
+}
+
+/* A framed print. Not a container - a mount.
+   The media widgets in both concepts sit in a white frame with a soft drop
+   shadow, like something printed and pinned to the wall. Deliberately
+   separate from the panel styles so it can be put on a widget that has no
+   panel, which is the usual case for a photo or a video. */
+.widget.framed {
+  border: 0.55vmin solid rgba(255,255,255,.92);
+  border-radius: calc(var(--radius) * 0.9);
+  box-shadow: 0 6px 22px rgba(0,0,0,.38);
+  overflow: hidden;
+}
+/* The frame is the padding; anything inside must reach it. */
+.widget.framed > .widget-body { border-radius: 0; }
+
+.widget.framed-dark {
+  border: 0.55vmin solid rgba(18,20,26,.88);
+  border-radius: calc(var(--radius) * 0.9);
+  box-shadow: 0 6px 22px rgba(0,0,0,.45);
+  overflow: hidden;
+}
+.widget.panel-outline {
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: var(--radius);
+  padding: 1.2vmin 1.6vmin;
+}
+
+/* A native-video widget is a HOLE, not a picture. mpv paints an always-on-top
+   window over this rectangle, so anything drawn here would be hidden anyway —
+   and a black fill helps the seam disappear if mpv is a frame late. */
+.widget.native-video { background: #000; }
+
+/* Text over a photo needs its own contrast, independent of any panel. */
+.widget.shadowed { text-shadow: 0 2px 12px rgba(0,0,0,.75), 0 0 3px rgba(0,0,0,.5); }
+
+.widget-title {
+  font-size: 1.5vmin;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  margin-bottom: .8vmin;
+  flex: 0 0 auto;
+}
+
+.widget-body { flex: 1 1 auto; min-height: 0; position: relative; }
+
+/* Shown in the corner of a widget that could not load. Small and quiet on
+   purpose: one dead RSS feed should not shout over an otherwise fine board,
+   but it must not fail silently either or nobody ever fixes it. */
+.widget-error {
+  position: absolute; right: .6vmin; bottom: .4vmin;
+  font-size: 1.1vmin; color: #d98b8b; opacity: .75;
+  max-width: 90%; text-align: right; pointer-events: none;
+}

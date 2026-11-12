@@ -1,0 +1,255 @@
+{
+  "name": "Hearth (landscape)",
+  "description": "The Hearth board arranged for a landscape screen — the video and photo frame down the left, everything you read down the right.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "#000000",
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 2,
+      "y": 2,
+      "w": 26,
+      "h": 8,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "pad_hour": false,
+        "weight": 250,
+        "max_size": 8
+      }
+    },
+    {
+      "kind": "date",
+      "x": 2,
+      "y": 10,
+      "w": 26,
+      "h": 4,
+      "z": 1,
+      "config": {
+        "short": false,
+        "weight": 400,
+        "max_size": 3
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 30,
+      "y": 2,
+      "w": 16,
+      "h": 10,
+      "z": 13,
+      "config": {
+        "layout": "compact",
+        "title": ""
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 48,
+      "y": 2,
+      "w": 50,
+      "h": 10,
+      "z": 2,
+      "config": {
+        "title": "",
+        "days": 5,
+        "show_feels_like": false,
+        "show_precip": false,
+        "layout": "forecast",
+        "animate": false
+      }
+    },
+    {
+      "kind": "video",
+      "x": 2,
+      "y": 16,
+      "w": 44,
+      "h": 44,
+      "z": 3,
+      "config": {
+        "engine": "auto",
+        "muted": true,
+        "loop": false,
+        "fit": "contain",
+        "reload_minutes": 180
+      }
+    },
+    {
+      "kind": "text",
+      "x": 3,
+      "y": 62,
+      "w": 28,
+      "h": 4,
+      "z": 5,
+      "config": {
+        "text": "Your text here",
+        "size": 2.8,
+        "weight": 400,
+        "font": "script"
+      }
+    },
+    {
+      "kind": "shape",
+      "x": 4,
+      "y": 65.5,
+      "w": 26,
+      "h": 3,
+      "z": 7,
+      "config": {
+        "shape": "line",
+        "opacity": 8
+      }
+    },
+    {
+      "kind": "photos",
+      "x": 2,
+      "y": 69,
+      "w": 44,
+      "h": 29,
+      "z": 6,
+      "config": {
+        "interval_seconds": 45,
+        "shuffle": true,
+        "fit": "contain",
+        "transition_ms": 1200
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 48,
+      "y": 16,
+      "w": 50,
+      "h": 17,
+      "z": 12,
+      "config": {
+        "style": "bubbles",
+        "strip_days": 14,
+        "vertical": false
+      }
+    },
+    {
+      "kind": "bible_verse",
+      "x": 48,
+      "y": 34,
+      "w": 50,
+      "h": 9,
+      "z": 16,
+      "config": {}
+    },
+    {
+      "kind": "rss",
+      "x": 48,
+      "y": 44,
+      "w": 50,
+      "h": 10,
+      "z": 4,
+      "config": {
+        "title": "",
+        "style": "ticker",
+        "max_items": 1,
+        "show_summary": true,
+        "show_source": true,
+        "show_age": true,
+        "size": 1.7,
+        "title_lines": 2,
+        "rotate": true,
+        "summary_lines": 9,
+        "rotate_seconds": 25
+      }
+    },
+    {
+      "kind": "text",
+      "x": 48,
+      "y": 55,
+      "w": 34,
+      "h": 6,
+      "z": 9,
+      "config": {
+        "text": "Your text here",
+        "size": 2
+      }
+    },
+    {
+      "kind": "qr",
+      "x": 85,
+      "y": 55,
+      "w": 11,
+      "h": 19.5,
+      "z": 8,
+      "config": {
+        "ssid": "Your Wi-Fi name",
+        "password": "your-wifi-password"
+      }
+    },
+    {
+      "kind": "text",
+      "x": 48,
+      "y": 76,
+      "w": 50,
+      "h": 4,
+      "z": 14,
+      "config": {
+        "text": "Your text here"
+      }
+    },
+    {
+      "kind": "shape",
+      "x": 48,
+      "y": 79.5,
+      "w": 48,
+      "h": 3,
+      "z": 15,
+      "config": {
+        "shape": "line",
+        "opacity": 2
+      }
+    },
+    {
+      "kind": "tracker",
+      "x": 48,
+      "y": 83,
+      "w": 50,
+      "h": 7,
+      "z": 11,
+      "config": {
+        "title": "",
+        "layout": "chips",
+        "chip_size": 4,
+        "chip_style": "glass",
+        "centre": true,
+        "short_names": true,
+        "show_battery": true,
+        "show_phone": true,
+        "show_updated": true,
+        "entity_ids": [],
+        "refresh_seconds": 30,
+        "show_name": true
+      }
+    },
+    {
+      "kind": "tracker",
+      "x": 48,
+      "y": 90.5,
+      "w": 50,
+      "h": 7,
+      "z": 10,
+      "config": {
+        "title": "",
+        "layout": "chips",
+        "chip_size": 4,
+        "chip_style": "glass",
+        "centre": true,
+        "short_names": true,
+        "show_battery": true,
+        "show_phone": true,
+        "show_updated": true,
+        "entity_ids": [],
+        "refresh_seconds": 30,
+        "show_name": true
+      }
+    }
+  ]
+}

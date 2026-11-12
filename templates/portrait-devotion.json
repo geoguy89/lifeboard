@@ -1,0 +1,98 @@
+{
+  "name": "Daily Devotion",
+  "description": "A verse, a passage from your own notes, and the sun and moon for the day. Quiet enough to live in a hallway.",
+  "aspect": "portrait",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(180deg, #1a1620 0%, #0b0910 55%, #07060a 100%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 5,
+      "y": 3,
+      "w": 90,
+      "h": 7,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": false
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 5,
+      "y": 11,
+      "w": 90,
+      "h": 14,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false,
+        "weight": 200
+      }
+    },
+    {
+      "kind": "bible_verse",
+      "x": 5,
+      "y": 27,
+      "w": 90,
+      "h": 25,
+      "z": 0,
+      "config": {
+        "translation": "nlt",
+        "align": "center",
+        "italic": true,
+        "show_attribution": true,
+        "show_translation": true,
+        "size": 2.6,
+        "title": ""
+      }
+    },
+    {
+      "kind": "obsidian_notes",
+      "x": 5,
+      "y": 54,
+      "w": 90,
+      "h": 27,
+      "z": 0,
+      "config": {
+        "mode": "excerpts",
+        "shuffle": true,
+        "seconds": 45,
+        "show_title": true,
+        "show_heading": false,
+        "min_chars": 80,
+        "max_chars": 400,
+        "size": 2.1,
+        "title": "From my notes"
+      }
+    },
+    {
+      "kind": "sunmoon",
+      "x": 5,
+      "y": 83,
+      "w": 42,
+      "h": 15,
+      "z": 0,
+      "config": {
+        "show_sun": true,
+        "show_moon": true,
+        "hour12": true,
+        "title": ""
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 53,
+      "y": 83,
+      "w": 42,
+      "h": 15,
+      "z": 0,
+      "config": {
+        "layout": "compact",
+        "days": 3,
+        "title": ""
+      }
+    }
+  ]
+}

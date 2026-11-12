@@ -1,0 +1,73 @@
+{
+  "name": "Family Hub",
+  "description": "The everyday board: time, weather, what's coming up, and a photo strip along the bottom.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "linear-gradient(160deg, #14161c 0%, #0b0b0f 60%)",
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 0,
+      "y": 3,
+      "w": 100,
+      "h": 13,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false,
+        "weight": 200
+      }
+    },
+    {
+      "kind": "date",
+      "x": 0,
+      "y": 16.5,
+      "w": 100,
+      "h": 5,
+      "z": 0,
+      "config": {
+        "short": false
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 4,
+      "y": 23,
+      "w": 92,
+      "h": 15,
+      "z": 0,
+      "config": {
+        "title": "",
+        "days": 5,
+        "layout": "full"
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 4,
+      "y": 40,
+      "w": 92,
+      "h": 33,
+      "z": 0,
+      "config": {
+        "title": "Coming up",
+        "style": "agenda",
+        "max_items": 11
+      }
+    },
+    {
+      "kind": "photos",
+      "x": 0,
+      "y": 75,
+      "w": 100,
+      "h": 25,
+      "z": 0,
+      "config": {
+        "interval_seconds": 45,
+        "shuffle": true,
+        "fit": "cover"
+      }
+    }
+  ]
+}

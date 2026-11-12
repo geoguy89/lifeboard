@@ -1,0 +1,105 @@
+{
+  "name": "Tasks (landscape)",
+  "description": "Three task lists side by side with the day across the top. Sized to be tapped, not squinted at.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(160deg, #14181f 0%, #0a0c10 65%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 2,
+      "y": 2,
+      "w": 34,
+      "h": 10,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": false
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 38,
+      "y": 2,
+      "w": 26,
+      "h": 10,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 66,
+      "y": 2,
+      "w": 32,
+      "h": 10,
+      "z": 0,
+      "config": {
+        "layout": "compact",
+        "days": 3,
+        "title": ""
+      }
+    },
+    {
+      "kind": "tasks",
+      "x": 2,
+      "y": 14,
+      "w": 31,
+      "h": 84,
+      "z": 0,
+      "config": {
+        "heading": "Today",
+        "backend": "local",
+        "group_by": "due",
+        "interactive": true,
+        "remove_when_done": true,
+        "max_items": 14,
+        "size": 2.4,
+        "title_lines": 2,
+        "empty_text": "Nothing left today"
+      }
+    },
+    {
+      "kind": "tasks",
+      "x": 34,
+      "y": 14,
+      "w": 31,
+      "h": 84,
+      "z": 0,
+      "config": {
+        "heading": "This week",
+        "backend": "local",
+        "group_by": "due",
+        "interactive": true,
+        "remove_when_done": false,
+        "max_items": 14,
+        "size": 2.4,
+        "title_lines": 2,
+        "empty_text": "Clear"
+      }
+    },
+    {
+      "kind": "tasks",
+      "x": 66,
+      "y": 14,
+      "w": 32,
+      "h": 84,
+      "z": 0,
+      "config": {
+        "heading": "Shopping",
+        "backend": "local",
+        "group_by": "none",
+        "interactive": true,
+        "remove_when_done": true,
+        "show_due": false,
+        "max_items": 16,
+        "size": 2.4,
+        "empty_text": "Nothing needed"
+      }
+    }
+  ]
+}

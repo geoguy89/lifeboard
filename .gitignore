@@ -1,0 +1,18 @@
+.venv/
+__pycache__/
+*.pyc
+*.img
+*.img.zst
+
+# Android build output and the local signing key.
+android/LifeBoard.apk
+android/lifeboard-debug.keystore
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+
+# Local only: the personal-word list the secrets check reads, and notes
+# written for the owner rather than for users.
+tools/personal-words.txt
+private/

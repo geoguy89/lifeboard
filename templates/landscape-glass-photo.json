@@ -1,0 +1,91 @@
+{
+  "name": "Glass over Photo (landscape)",
+  "description": "The frosted-panel treatment for a normally mounted TV.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "#000000",
+  "background_kind": "source",
+  "background_dim": 40,
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 3,
+      "y": 6,
+      "w": 38,
+      "h": 22,
+      "z": 0,
+      "panel": "none",
+      "config": {
+        "hour12": true,
+        "show_meridiem": false,
+        "weight": 200
+      }
+    },
+    {
+      "kind": "date",
+      "x": 3,
+      "y": 28,
+      "w": 38,
+      "h": 7,
+      "z": 0,
+      "panel": "none",
+      "config": {}
+    },
+    {
+      "kind": "weather",
+      "x": 3,
+      "y": 38,
+      "w": 38,
+      "h": 26,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "title": "",
+        "days": 5
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 3,
+      "y": 67,
+      "w": 38,
+      "h": 30,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "title": "Coming up",
+        "style": "agenda",
+        "max_items": 5
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 45,
+      "y": 6,
+      "w": 52,
+      "h": 58,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "style": "month",
+        "max_per_day": 3
+      }
+    },
+    {
+      "kind": "rss",
+      "x": 45,
+      "y": 67,
+      "w": 52,
+      "h": 30,
+      "z": 0,
+      "panel": "glass",
+      "config": {
+        "title": "News",
+        "style": "list",
+        "max_items": 3,
+        "show_age": true
+      }
+    }
+  ]
+}

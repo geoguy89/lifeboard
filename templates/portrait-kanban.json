@@ -1,0 +1,54 @@
+{
+  "name": "Kanban (portrait)",
+  "description": "The same board stacked down a portrait screen, so four columns are four rows rather than four slivers.",
+  "aspect": "portrait",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(180deg, #12151b 0%, #0a0b0f 60%, #08090c 100%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 5,
+      "y": 2,
+      "w": 58,
+      "h": 7,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": true
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 65,
+      "y": 2,
+      "w": 30,
+      "h": 7,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "kanban",
+      "x": 4,
+      "y": 11,
+      "w": 92,
+      "h": 87,
+      "z": 0,
+      "config": {
+        "backend": "planner",
+        "direction": "vertical",
+        "interactive": true,
+        "default_action": "next",
+        "show_actions": true,
+        "max_per_column": 4,
+        "size": 1.9,
+        "refresh_minutes": 5,
+        "empty_text": "Pick a plan on the Sources tab"
+      }
+    }
+  ]
+}

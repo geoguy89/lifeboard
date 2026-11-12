@@ -1,0 +1,81 @@
+{
+  "name": "Guest Welcome",
+  "description": "A greeting, the Wi-Fi QR code, and the essentials. Point it at an entryway screen.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "linear-gradient(160deg, #14161c 0%, #0b0b0f 60%)",
+  "widgets": [
+    {
+      "kind": "text",
+      "x": 4,
+      "y": 5,
+      "w": 92,
+      "h": 9,
+      "z": 0,
+      "config": {
+        "text": "Welcome",
+        "size": 6,
+        "weight": 200
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 0,
+      "y": 15,
+      "w": 100,
+      "h": 11,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false
+      }
+    },
+    {
+      "kind": "date",
+      "x": 0,
+      "y": 26,
+      "w": 100,
+      "h": 4.5,
+      "z": 0,
+      "config": {}
+    },
+    {
+      "kind": "qr",
+      "x": 22,
+      "y": 34,
+      "w": 56,
+      "h": 34,
+      "z": 0,
+      "config": {
+        "mode": "wifi",
+        "caption": "Scan to join the Wi-Fi"
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 4,
+      "y": 70,
+      "w": 92,
+      "h": 14,
+      "z": 0,
+      "config": {
+        "title": "",
+        "days": 4
+      }
+    },
+    {
+      "kind": "text",
+      "x": 4,
+      "y": 86,
+      "w": 92,
+      "h": 10,
+      "z": 0,
+      "config": {
+        "text": "Make yourself at home",
+        "size": 2.4,
+        "weight": 300
+      }
+    }
+  ]
+}

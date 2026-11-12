@@ -1,0 +1,64 @@
+{
+  "name": "Week Ahead",
+  "description": "Seven day columns across the wall, with the time and today's weather in a thin header. For deciding who is where this week.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(165deg, #171a21 0%, #0a0b0e 65%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 2,
+      "y": 2,
+      "w": 30,
+      "h": 11,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": false,
+        "show_year": false
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 35,
+      "y": 2,
+      "w": 30,
+      "h": 11,
+      "z": 0,
+      "config": {
+        "layout": "compact",
+        "show_feels_like": true,
+        "title": ""
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 68,
+      "y": 2,
+      "w": 30,
+      "h": 11,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 2,
+      "y": 15,
+      "w": 96,
+      "h": 83,
+      "z": 0,
+      "config": {
+        "style": "week",
+        "title": "",
+        "max_per_day": 6,
+        "week_start": "sun",
+        "scroll_overflow": true
+      }
+    }
+  ]
+}

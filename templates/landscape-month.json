@@ -1,0 +1,72 @@
+{
+  "name": "Month at a glance",
+  "description": "A full month grid with the time and weather down the side.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(160deg, #14161c 0%, #0b0b0f 60%)",
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 1,
+      "y": 3,
+      "w": 24,
+      "h": 16,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false
+      }
+    },
+    {
+      "kind": "date",
+      "x": 1,
+      "y": 20,
+      "w": 24,
+      "h": 7,
+      "z": 0,
+      "config": {
+        "short": true
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 1,
+      "y": 29,
+      "w": 24,
+      "h": 30,
+      "z": 0,
+      "config": {
+        "title": "",
+        "days": 5,
+        "layout": "full"
+      }
+    },
+    {
+      "kind": "rss",
+      "x": 1,
+      "y": 61,
+      "w": 24,
+      "h": 36,
+      "z": 0,
+      "config": {
+        "title": "News",
+        "style": "list",
+        "max_items": 6
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 27,
+      "y": 3,
+      "w": 72,
+      "h": 94,
+      "z": 0,
+      "config": {
+        "title": "",
+        "style": "month",
+        "max_per_day": 4
+      }
+    }
+  ]
+}

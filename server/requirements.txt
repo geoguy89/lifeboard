@@ -1,0 +1,31 @@
+# Core service
+fastapi>=0.115
+uvicorn[standard]>=0.30
+httpx>=0.27
+
+# Calendar. recurring-ical-events is what makes RRULE/EXDATE/RECURRENCE-ID
+# correct across DST boundaries - hand-rolling that with dateutil.rrule gets
+# the common cases right and the interesting ones subtly wrong.
+icalendar>=6.0
+recurring-ical-events>=3.2
+
+# Feeds. Tolerant by design: sets .bozo on malformed input rather than raising,
+# which is what a wall display needs.
+feedparser>=6.0
+
+# QR codes, rendered server-side so the browser fetches no images and a wifi
+# password never reaches the page source.
+qrcode>=7.4
+pillow>=10.0
+
+# File uploads for the media library.
+python-multipart>=0.0.9
+
+# Encryption at rest for OAuth tokens and API credentials. Without it the
+# service still runs, but says loudly that secrets are stored in the clear.
+cryptography>=42.0
+
+# Google and Microsoft calendars need no SDK: the OAuth flows and both
+# calendar APIs are plain HTTP, handled in providers/oauth*.py with httpx.
+# Dropping google-api-python-client and msal removes ~30 transitive
+# dependencies from an appliance that has to stay patchable.

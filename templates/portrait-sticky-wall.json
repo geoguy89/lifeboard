@@ -1,0 +1,105 @@
+{
+  "name": "Sticky Wall",
+  "description": "A corkboard of notes - shopping, reminders, whatever you type - with the week's agenda in the last square.",
+  "aspect": "portrait",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(165deg, #2b211a 0%, #191310 60%, #0f0b09 100%)",
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 4,
+      "y": 2,
+      "w": 50,
+      "h": 12,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "date",
+      "x": 56,
+      "y": 2,
+      "w": 40,
+      "h": 12,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": true
+      }
+    },
+    {
+      "kind": "postit",
+      "x": 4,
+      "y": 16,
+      "w": 44,
+      "h": 39,
+      "z": 0,
+      "config": {
+        "heading": "Reminders",
+        "colour": "yellow",
+        "content": "gtasks",
+        "bullet_style": "dot",
+        "max_items": 8,
+        "size": 2.1,
+        "tilt": -2,
+        "font": "hand"
+      }
+    },
+    {
+      "kind": "postit",
+      "x": 52,
+      "y": 16,
+      "w": 44,
+      "h": 39,
+      "z": 0,
+      "config": {
+        "heading": "Grocery List",
+        "colour": "green",
+        "content": "gtasks",
+        "bullet_style": "check",
+        "max_items": 9,
+        "size": 2,
+        "tilt": 1.8,
+        "font": "hand"
+      }
+    },
+    {
+      "kind": "postit",
+      "x": 4,
+      "y": 57,
+      "w": 44,
+      "h": 41,
+      "z": 0,
+      "config": {
+        "heading": "Don’t forget",
+        "colour": "pink",
+        "content": "text",
+        "text": "Bins out Tuesday\nCall the dentist",
+        "bullet_style": "dash",
+        "max_items": 8,
+        "size": 2.1,
+        "tilt": 1.2,
+        "font": "hand"
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 52,
+      "y": 57,
+      "w": 44,
+      "h": 41,
+      "z": 0,
+      "config": {
+        "style": "agenda",
+        "title": "This week",
+        "days": 7,
+        "max_items": 9,
+        "scroll_overflow": true
+      }
+    }
+  ]
+}

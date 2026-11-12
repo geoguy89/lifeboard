@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0d0f13">
+<title>Add to the board</title>
+<!--
+  The page a phone opens after scanning the QR on the wall.
+
+  WHAT IT IS NOT: it is not the admin. Somebody standing in the kitchen who
+  wants to add "milk" should not meet a login, and giving the family the admin
+  password so they can add a task is how the admin password ends up written on
+  the fridge. The URL's token is the whole authorisation, and it can do exactly
+  one thing - add a task to one list. It cannot read the board, change a
+  layout, or see any other list.
+
+  WHAT IT IS BUILT FOR: one hand, in a hurry, on a phone that may be on a
+  patchy connection. So: one field, focused on load; the send is optimistic and
+  the field clears immediately; and it works offline-ish by queueing what it
+  could not send rather than losing it.
+-->
+<style>
+  :root {
+    --bg: #0d0f13; --panel: #171b22; --line: #262c36;
+    --fg: #e8eaed; --dim: #98a0ac; --accent: #5b9dd9; --good: #7fb069;
+    --bad: #d98b8b;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f5f7; --panel: #fff; --line: #dfe3e8;
+      --fg: #1b1f26; --dim: #667085; --accent: #2f6fad;
+    }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--bg); color: var(--fg);
+    font: 400 17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+    display: flex; flex-direction: column;
+    /* Respect the notch and the home indicator. */
+    padding: env(safe-area-inset-top) env(safe-area-inset-right)
+             env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+  header { padding: 1.1rem 1.1rem .6rem; }
+  h1 { margin: 0; font-size: 1.15rem; font-weight: 600; }
+  .sub { color: var(--dim); font-size: .85rem; margin-top: .15rem; }
+
+  form { display: flex; gap: .5rem; padding: .4rem 1.1rem 1rem; }
+  input[type=text] {
+    flex: 1 1 auto; min-width: 0;
+    background: var(--panel); color: var(--fg);
+    border: 1px solid var(--line); border-radius: 12px;
+    padding: .85rem .9rem;
+    /* 17px minimum, or iOS zooms the page on focus and never zooms back. */
+    font-size: 17px;
+  }
+  input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  button {
+    flex: 0 0 auto; background: var(--accent); color: #fff; border: 0;
+    border-radius: 12px; padding: .85rem 1.2rem; font-size: 17px;
+    font-weight: 600; min-width: 5.2rem;
+  }
+  button:disabled { opacity: .5; }
+
+  #list { flex: 1 1 auto; overflow-y: auto; padding: 0 1.1rem 2rem; }
+  .row {
+    display: flex; align-items: flex-start; gap: .7rem;
+    padding: .8rem .2rem; border-bottom: 1px solid var(--line);
+    transition: opacity .3s ease;
+  }
+  .row.sending { opacity: .5; }
+  .row.failed .txt { color: var(--bad); }
+  .tick {
+    flex: 0 0 auto; width: 1.5rem; height: 1.5rem; border-radius: 7px;
+    border: 2px solid var(--line); display: flex; align-items: center;
+    justify-content: center; color: var(--good); font-weight: 700;
+  }
+  .txt { flex: 1 1 auto; min-width: 0; word-break: break-word; }
+  .empty { color: var(--dim); padding: 1.4rem .2rem; }
+  #note {
+    margin: 0 1.1rem 1rem; padding: .7rem .9rem; border-radius: 10px;
+    background: rgba(217,139,139,.14); color: var(--bad);
+    font-size: .88rem; display: none;
+  }
+  #note.show { display: block; }
+</style>
+</head>
+<body>
+  <header>
+    <h1 id="title">Add to the board</h1>
+    <div class="sub" id="sub">It appears on the wall straight away.</div>
+  </header>
+
+  <form id="form" autocomplete="off">
+    <input type="text" id="what" placeholder="Milk, call the plumber…"
+           enterkeyhint="send" autocapitalize="sentences" autocorrect="on">
+    <button type="submit" id="send">Add</button>
+  </form>
+
+  <div id="note"></div>
+  <div id="list"><div class="empty">Nothing sent yet from this phone.</div></div>
+
+<script type="module">
+/* The token is the path, so it never lands in a query string that a proxy or
+ * a browser history would keep in plain sight next to the hostname. */
+const TOKEN = location.pathname.split('/').filter(Boolean).pop() || '';
+const form = document.getElementById('form');
+const what = document.getElementById('what');
+const send = document.getElementById('send');
+const list = document.getElementById('list');
+const note = document.getElementById('note');
+
+/* What this phone has sent. Kept locally rather than read back from the
+ * board, because the token deliberately cannot read the list - it can only
+ * add. This is a receipt, not a view of the board. */
+const KEY = `lifeboard-sent-${TOKEN.slice(0, 8)}`;
+let sent = [];
+try { sent = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { sent = []; }
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(sent.slice(0, 40))); } catch { /* private mode */ }
+}
+
+function problem(message) {
+  note.textContent = message || '';
+  note.classList.toggle('show', Boolean(message));
+}
+
+function draw() {
+  list.replaceChildren();
+  if (!sent.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.textContent = 'Nothing sent yet from this phone.';
+    list.append(empty);
+    return;
+  }
+  for (const item of sent) {
+    const row = document.createElement('div');
+    row.className = `row${item.state === 'sending' ? ' sending' : ''}`
+      + `${item.state === 'failed' ? ' failed' : ''}`;
+    const tick = document.createElement('div');
+    tick.className = 'tick';
+    tick.textContent = item.state === 'sent' ? '✓' : item.state === 'failed' ? '!' : '';
+    const txt = document.createElement('div');
+    txt.className = 'txt';
+    txt.textContent = item.text
+      + (item.state === 'failed' ? ' — not sent, tap Add again' : '');
+    row.append(tick, txt);
+    list.append(row);
+  }
+}
+
+async function push(item) {
+  const resp = await fetch(`/api/hook/${TOKEN}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: item.text }),
+  });
+  if (!resp.ok) {
+    const body = await resp.json().catch(() => ({}));
+    throw new Error(body.detail || body.error || `the board said ${resp.status}`);
+  }
+  return resp.json();
+}
+
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const text = what.value.trim();
+  if (!text) return;
+
+  /* Optimistic and immediate. Somebody adding three things in a row should not
+   * wait for the first to land before typing the second, and on a phone at the
+   * edge of the wifi that wait can be seconds. */
+  const item = { text, state: 'sending', at: Date.now() };
+  sent.unshift(item);
+  what.value = '';
+  what.focus();
+  problem('');
+  draw();
+  save();
+
+  try {
+    await push(item);
+    item.state = 'sent';
+  } catch (err) {
+    item.state = 'failed';
+    problem(String(err.message || err));
+  }
+  draw();
+  save();
+});
+
+/* Retry anything that failed, whenever the phone gets its connection back.
+ * A task typed in a dead spot in the house should not be lost because of it. */
+async function retryFailed() {
+  for (const item of sent.filter((i) => i.state === 'failed')) {
+    try {
+      await push(item);
+      item.state = 'sent';
+      problem('');
+    } catch { return; }        // still down; leave the rest for next time
+  }
+  draw();
+  save();
+}
+window.addEventListener('online', retryFailed);
+
+if (!TOKEN) {
+  problem('This link is missing its code. Scan the QR on the board again.');
+  send.disabled = true;
+}
+draw();
+what.focus();
+</script>
+</body>
+</html>

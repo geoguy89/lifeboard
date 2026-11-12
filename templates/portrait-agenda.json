@@ -1,0 +1,59 @@
+{
+  "name": "Agenda",
+  "description": "Calendar-first. A long vertical agenda with a compact header - best where the schedule is the whole point.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "linear-gradient(160deg, #14161c 0%, #0b0b0f 60%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 4,
+      "y": 3,
+      "w": 62,
+      "h": 6,
+      "z": 0,
+      "config": {
+        "short": false
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 66,
+      "y": 2.5,
+      "w": 32,
+      "h": 7,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 4,
+      "y": 10,
+      "w": 92,
+      "h": 12,
+      "z": 0,
+      "config": {
+        "layout": "compact",
+        "title": ""
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 4,
+      "y": 24,
+      "w": 92,
+      "h": 73,
+      "z": 0,
+      "config": {
+        "title": "",
+        "style": "agenda",
+        "max_items": 20,
+        "days": 60
+      }
+    }
+  ]
+}

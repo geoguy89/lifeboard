@@ -1,0 +1,54 @@
+{
+  "name": "Kanban",
+  "description": "A Planner board on the wall, columns left to right. Tick a card to send it to the next column; the last one completes it.",
+  "aspect": "landscape",
+  "orientation": "normal",
+  "category": "official",
+  "background": "linear-gradient(160deg, #12151b 0%, #090a0d 70%)",
+  "widgets": [
+    {
+      "kind": "date",
+      "x": 2,
+      "y": 2,
+      "w": 40,
+      "h": 9,
+      "z": 0,
+      "config": {
+        "weekday": true,
+        "short": true
+      }
+    },
+    {
+      "kind": "clock",
+      "x": 70,
+      "y": 2,
+      "w": 28,
+      "h": 9,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": true,
+        "weight": 300
+      }
+    },
+    {
+      "kind": "kanban",
+      "x": 2,
+      "y": 13,
+      "w": 96,
+      "h": 85,
+      "z": 0,
+      "config": {
+        "backend": "planner",
+        "direction": "horizontal",
+        "interactive": true,
+        "default_action": "next",
+        "show_actions": true,
+        "max_per_column": 10,
+        "size": 1.7,
+        "refresh_minutes": 5,
+        "empty_text": "Pick a plan on the Sources tab"
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "name": "Home Command",
+  "description": "Home Assistant metrics and where everyone is, with the calendar underneath.",
+  "aspect": "portrait",
+  "orientation": "right",
+  "category": "official",
+  "background": "linear-gradient(160deg, #14161c 0%, #0b0b0f 60%)",
+  "widgets": [
+    {
+      "kind": "clock",
+      "x": 0,
+      "y": 2.5,
+      "w": 100,
+      "h": 11,
+      "z": 0,
+      "config": {
+        "hour12": true,
+        "show_meridiem": false
+      }
+    },
+    {
+      "kind": "date",
+      "x": 0,
+      "y": 14,
+      "w": 100,
+      "h": 4.5,
+      "z": 0,
+      "config": {
+        "short": true
+      }
+    },
+    {
+      "kind": "weather",
+      "x": 4,
+      "y": 20,
+      "w": 92,
+      "h": 14,
+      "z": 0,
+      "config": {
+        "title": "",
+        "days": 4
+      }
+    },
+    {
+      "kind": "tracker",
+      "x": 4,
+      "y": 36,
+      "w": 92,
+      "h": 20,
+      "z": 0,
+      "config": {
+        "title": "Where everyone is"
+      }
+    },
+    {
+      "kind": "entity",
+      "x": 4,
+      "y": 58,
+      "w": 92,
+      "h": 16,
+      "z": 0,
+      "config": {
+        "title": "House",
+        "columns": 2
+      }
+    },
+    {
+      "kind": "calendar",
+      "x": 4,
+      "y": 76,
+      "w": 92,
+      "h": 21,
+      "z": 0,
+      "config": {
+        "title": "Next up",
+        "style": "agenda",
+        "max_items": 6
+      }
+    }
+  ]
+}
