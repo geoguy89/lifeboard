@@ -136,7 +136,7 @@ Optional build-time settings:
 
 | Variable | Default | Effect |
 |---|---|---|
-| `LIFEBOARD_HOSTNAME` | `LifeBoard` | Hostname, so it answers to `LifeBoard.local` |
+| `LIFEBOARD_HOSTNAME` | `LifeBoard` | Hostname; a Pi image also answers to `LifeBoard.local` |
 | `LIFEBOARD_WIFI_COUNTRY` | `US` | Wi-Fi regulatory country |
 | `LIFEBOARD_SSH_KEY` | none | Public key for root over SSH |
 | `LIFEBOARD_ROOT_PASSWORD` | none | Root password for the local console |
