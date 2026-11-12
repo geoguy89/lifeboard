@@ -9,6 +9,9 @@ Flash the image to a Raspberry Pi or an x86 mini PC, plug it into a screen,
 and set everything up from your phone or laptop. There is also an Android TV
 app that runs the whole board on a TV box.
 
+**[Download the latest release](https://github.com/geoguy89/lifeboard/releases/latest)**
+· [Install](#install) · [Setting up a new board](#setting-up-a-new-board)
+
 <p align="center">
   <img src="docs/images/portrait-family-hub.png" width="240" alt="Family Hub template">
   &nbsp;
@@ -47,7 +50,8 @@ app that runs the whole board on a TV box.
 
 ## Setting up a new board
 
-No keyboard, no config files. Flash the image, power it on, and:
+No keyboard, no config files. [Flash the image](#install), plug the board into
+the screen, power it on, and:
 
 <table>
 <tr>
@@ -120,19 +124,59 @@ stream that runs all day keeps working.
 
 ## Install
 
-### Flash an image
+### Raspberry Pi or x86 PC
 
-Build on any Linux host with root (a privileged Debian container works):
+1. **Download** the image for your hardware from the
+   [latest release](https://github.com/geoguy89/lifeboard/releases/latest):
+
+   | File | Hardware |
+   |---|---|
+   | `lifeboard-pi.img.gz` | Raspberry Pi 3B, 4 or 5 |
+   | `lifeboard-x86.img.gz` | x86-64 mini PC or PC (UEFI or legacy BIOS) |
+
+2. **Write it** to an SD card, USB stick or SSD: 8 GB or larger for the Pi,
+   16 GB or larger for x86. There is no need to unzip it first.
+   - **Raspberry Pi Imager:** *Choose OS → Use custom*, pick the `.img.gz`,
+     choose the card, and **skip OS customisation** when asked; the image does
+     its own setup.
+   - **balenaEtcher** or **Rufus:** select the `.img.gz` and the drive, then
+     flash.
+   - **Linux or macOS:**
+     `gunzip -c lifeboard-pi.img.gz | sudo dd of=/dev/sdX bs=4M status=progress conv=fsync`
+     (replace `/dev/sdX` with the card, and double-check it).
+
+3. **Boot it** connected to the TV or monitor. The first boot grows the disk to
+   full size, which takes a minute or two, then the screen shows the next step:
+   the board's address on Ethernet, or [the Wi-Fi setup](#setting-up-a-new-board).
+
+4. **Open the admin page** from a phone or laptop at the address on screen,
+   for example `http://<board-address>:8080/admin/`, and pick a template.
+
+To check a download first, compare it with `SHA256SUMS.txt` from the same
+release: `sha256sum -c SHA256SUMS.txt --ignore-missing` on Linux or macOS, or
+`Get-FileHash lifeboard-pi.img.gz` in PowerShell on Windows.
+
+### Android TV box
+
+Download `LifeBoard-standalone.apk` from the
+[latest release](https://github.com/geoguy89/lifeboard/releases/latest) and
+install it, either with `adb install -r LifeBoard-standalone.apk` or by copying
+it to the box and opening it (allow installs from unknown sources when asked).
+Open LifeBoard, then browse to the address it shows from a phone or laptop on
+the same network. Releases from v1.0.0 on are signed with the same key, so a
+newer APK installs over the old one. More in [android/README.md](android/README.md).
+
+### Build the images yourself
+
+On any Linux host with root (a privileged Debian container works):
 
 ```bash
 sudo ./image/build-pi-image.sh  lifeboard-pi.img   # Raspberry Pi, arm64
 sudo ./image/build-x86-image.sh lifeboard.img      # x86-64
 ```
 
-Write it with Raspberry Pi Imager, balenaEtcher, Rufus or `dd`. The root
-partition grows to fill the card or disk on first boot.
-
-Optional build-time settings:
+The Pi build runs under qemu emulation and takes about half an hour. Optional
+build-time settings:
 
 | Variable | Default | Effect |
 |---|---|---|
@@ -144,9 +188,13 @@ Optional build-time settings:
 | `LIFEBOARD_CLEAN_IMAGE` | `0` | `1` ignores any key or password, for an image to hand out |
 
 Images contain no keys or passwords unless you pass them, and each board
-generates its own SSH host keys on first boot.
+generates its own SSH host keys on first boot. The release images are built
+with none.
 
-### Or install on an existing Debian machine
+The APK is built by GitHub Actions when a release is published; to build it
+yourself, see [android/README.md](android/README.md).
+
+### Install on an existing Debian machine
 
 ```bash
 git clone https://github.com/geoguy89/lifeboard.git && cd lifeboard

@@ -3,6 +3,15 @@
 The whole LifeBoard — server, database and board — in one APK for an Android
 TV box, with touch calibration for an overlay frame.
 
+**Install:** download `LifeBoard-standalone.apk` from the
+[latest release](https://github.com/geoguy89/lifeboard/releases/latest), then
+`adb install -r LifeBoard-standalone.apk`, or copy it to the box and open it.
+Releases are built and signed by GitHub Actions
+(`.github/workflows/android.yml`); from v1.0.0 on they share one signing key,
+so a newer release installs over the old one.
+
+**Build it yourself:**
+
 ```
 # from the repo root; the APK lands in /path/to/build
 docker run --rm -v "$(pwd)":/src:ro -v /path/to/build:/out debian:bookworm \
@@ -11,6 +20,11 @@ adb install -r /path/to/build/LifeBoard-standalone.apk
 
 ./android/test.sh   # the calibration maths, on a desktop JVM
 ```
+
+A build without a signing key uses a throwaway debug key, so it will not
+install over a release APK (uninstall first). To sign with your own key, set
+`LIFEBOARD_KEYSTORE` (a PKCS#12 file, mounted into the container) and
+`LIFEBOARD_KEYSTORE_PASSWORD`.
 
 ## What this is
 
