@@ -280,6 +280,12 @@ INSIDE
 chroot "${MNT}" bash /tmp/inside.sh
 rm -f "${MNT}/tmp/inside.sh" "${MNT}/tmp/build-env.sh"
 
+# The build host's DNS settings were copied in for apt; they name the build
+# machine's network and are wrong on any other. NetworkManager writes this
+# file on first boot.
+rm -f "${MNT}/etc/resolv.conf"
+: > "${MNT}/etc/resolv.conf"
+
 # --------------------------------------------------------------------------
 log "Finishing"
 # --------------------------------------------------------------------------
